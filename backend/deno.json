@@ -1,5 +1,11 @@
 {
+  "imports": {
+    "express": "npm:express@^4.21.2",
+    "pocketbase": "npm:pocketbase@^0.24.0",
+    "socket.io": "npm:socket.io@^4.8.1",
+    "uuid": "npm:uuid@^11.0.3"
+  },
   "tasks": {
-    "dev": "deno run main.ts"
+    "run": "deno --allow-read --allow-env --allow-net main.ts"
   }
 }
