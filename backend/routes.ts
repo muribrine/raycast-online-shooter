@@ -1,4 +1,7 @@
 // deno-lint-ignore-file no-explicit-any
+
+import { path } from "./imports.ts";
+
 function set_up_routing(express_app: any, __dirname: any, ROUTES: string[][]) {
  
     ROUTES.forEach(route => {
@@ -8,7 +11,7 @@ function set_up_routing(express_app: any, __dirname: any, ROUTES: string[][]) {
   
       express_app.get(req, (_: any, response: any) => {
         console.log(`Got a request for ${req}.`);
-        response.sendFile(__dirname + res);
+        response.sendFile(path.resolve(__dirname + res));
       });
   
     });
