@@ -1,0 +1,31 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color:hsl(210, 10%, 10%);
+}
+
+#canvas {
+
+    width: 96rem;
+    height: 54rem;
+
+    background: linear-gradient(black, hsl(210,20%,30%));
+
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+
+}
+
+#overlay {
+    width: 96rem;
+    height: 54rem;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+}
