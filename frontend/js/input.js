@@ -11,6 +11,10 @@ function setup_input() {
             case 'ArrowDown': input['move'] = -1; break;
             case 'ArrowLeft': input['turn'] = -1; break;
             case 'ArrowRight': input['turn'] = 1; break;
+
+            case '1': input['number'] = 1; break;
+            case '2': input['number'] = 2; break;
+            case '3': input['number'] = 3; break;
             default: break;
         }
     });
@@ -26,6 +30,7 @@ function setup_input() {
             case 'ArrowDown': input['move'] = 0; break;
             case 'ArrowLeft': input['turn'] = 0; break;
             case 'ArrowRight': input['turn'] = 0; break;
+
             default: break;
         }
     });

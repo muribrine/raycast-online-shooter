@@ -1,7 +1,7 @@
 /** @param {CanvasRenderingContext2D} CTX @param {Array} rendering_data @returns {void} */
 function render_walls(CTX, rendering_data) {
     
-    CTX.clearRect(0,0,800,800);
+    CTX.clearRect(0,0,192,128);
     CTX.lineWidth = 2;
 
     let i = 0;
@@ -28,8 +28,6 @@ function render_walls(CTX, rendering_data) {
 /** @param {Object} game_data @returns {Array} */
 function raycast(game_data) {
 
-    console.time('raycast');
-
     let rendering_data = [];
     let wall_layer = [];
 
@@ -39,8 +37,8 @@ function raycast(game_data) {
     const PY = game_data.player.y;
     const PD = game_data.player.direction - 0.5;
 
-    const TOTAL_RAYS = 128;
-    const MAX_RAY_DISTANCE = 182;
+    const TOTAL_RAYS = 192;
+    const MAX_RAY_DISTANCE = 272;
 
     for (let ray_index = 0; ray_index < TOTAL_RAYS; ray_index++) {
 
@@ -63,7 +61,7 @@ function raycast(game_data) {
                 const HEIGHT = wall[4];
 
                 if(RX < X1 + WIDTH && RX > X1 && RY < Y1 + HEIGHT && RY > Y1) {
-                    const WALL_HEIGHT = 2000 / distance;
+                    const WALL_HEIGHT = 1750 / distance;
                     wall_layer.push(
                         rgbToHex(COLOR[0]-distance, COLOR[1]-distance, COLOR[2]-distance),
                         ray_index,
@@ -77,8 +75,8 @@ function raycast(game_data) {
             });
             if(FLAG) { break; };
 
-            if(RX < 0 || RY < 0 || RX > 128 || RY > 128) {
-                const WALL_HEIGHT = 2000 / distance;
+            if(RX < 0 || RY < 0 || RX > 256 || RY > 256) {
+                const WALL_HEIGHT = 1750 / distance;
                 rendering_data.push(
                     rgbToHex(255-distance, 255-distance, 255-distance),
                     ray_index,
@@ -96,7 +94,6 @@ function raycast(game_data) {
         rendering_data.push(wall);
     })
 
-    console.timeEnd('raycast');
     return rendering_data;
 
 };
