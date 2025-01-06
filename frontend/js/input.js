@@ -1,3 +1,5 @@
+let input = { 'move': 0, 'turn': 0, 'mouse1': 0, 'number': 0 };
+
 function setup_input() {
 
     document.addEventListener('keydown', e => {
@@ -30,6 +32,10 @@ function setup_input() {
             case 'ArrowDown': input['move'] = 0; break;
             case 'ArrowLeft': input['turn'] = 0; break;
             case 'ArrowRight': input['turn'] = 0; break;
+
+            case '1': input['number'] = 0; break;
+            case '2': input['number'] = 0; break;
+            case '3': input['number'] = 0; break;
 
             default: break;
         }

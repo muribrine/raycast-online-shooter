@@ -57,14 +57,14 @@ body {
 #CROSSHAIR {
 
     background-color: red;
-    width: 0.5rem;
-    height: 0.5rem;
+    width: 0.75rem;
+    height: 0.75rem;
 
     border-radius: 2px;
 
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: calc(50% - 0.2rem);
+    left: calc(50% - 0.2rem);
 
 }
 

@@ -10,12 +10,15 @@
         ["/js/core.js", "/../frontend/js/core.js"],
         ["/js/audio.js", "/../frontend/js/audio.js"],
         ["/SHOTGUN.png", "/img/SHOTGUN.png"],
+        ["/pistol.png", "/img/PISTOL.png"],
+        ["/knife.png", "/img/KNIFE.png"],
         ["/BOOM.png", "/img/BOOM.png"],
         ["/shotgun-fire.mp3", "/sounds/shotgun-fire.mp3"],
-        ["/shotgun-select.mp3", "/sounds/shotgun-selected.mp3"],
-        ["/pistol.png", "/img/PISTOL.png"],
+        ["/shotgun-select.mp3", "/sounds/shotgun-select.mp3"],
         ["/pistol-fire.mp3", "/sounds/pistol-fire.mp3"],
-        ["/pistol-select.mp3", "/sounds/pistol-selected.mp3"]
+        ["/pistol-select.mp3", "/sounds/pistol-select.mp3"],
+        ["/knife-fire.mp3", "/sounds/knife-fire.mp3"],
+        ["/knife-select.mp3", "/sounds/knife-select.mp3"]
     ],
     "HTTP_SERVER_PORT": 8080,
     "DATA_BASE_URL": "http://127.0.0.1:8090/api/"
