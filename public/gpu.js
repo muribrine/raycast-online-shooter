@@ -51,18 +51,26 @@ function createVertexBuffer(GL, VertexData) {
     GL.bindBuffer(GL.ARRAY_BUFFER, BUFFER);
     GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(VertexData), GL.STATIC_DRAW);
     return BUFFER;
-}
+};
 
-function eanbleVertexAttributeArrays(GL, SHADER_PROGRAM) {
+function createIndexBuffer(GL, IndexData) {
+
+    const BUFFER = GL.createBuffer();
+    GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, BUFFER);
+    GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, new Uint16Array(IndexData), GL.STATIC_DRAW);
+    return BUFFER;
+};
+
+function enableVertexAttributeArrays(GL, SHADER_PROGRAM) {
 
     const POSITION_ATTRIBUTE_LOCATION = GL.getAttribLocation(SHADER_PROGRAM, 'vertPosition');
     const COLOR_ATTRIBUTE_LOCATION = GL.getAttribLocation(SHADER_PROGRAM, 'vertColor');
     GL.vertexAttribPointer(
         POSITION_ATTRIBUTE_LOCATION,
-        2,
+        3,
         GL.FLOAT,
         GL.FALSE,
-        5 * Float32Array.BYTES_PER_ELEMENT,
+        6 * Float32Array.BYTES_PER_ELEMENT,
         0
     );
     GL.vertexAttribPointer(
@@ -70,11 +78,33 @@ function eanbleVertexAttributeArrays(GL, SHADER_PROGRAM) {
         3,
         GL.FLOAT,
         GL.FALSE,
-        5 * Float32Array.BYTES_PER_ELEMENT,
-        2 * Float32Array.BYTES_PER_ELEMENT
+        6 * Float32Array.BYTES_PER_ELEMENT,
+        3 * Float32Array.BYTES_PER_ELEMENT
     );
 
     GL.enableVertexAttribArray(POSITION_ATTRIBUTE_LOCATION);
     GL.enableVertexAttribArray(COLOR_ATTRIBUTE_LOCATION);
+
+};
+
+function setupMatrixUniforms(GL,PROGRAM) {
+
+    const worldMatrixUniformLocation = GL.getUniformLocation(PROGRAM,'worldMatrix');
+    const viewMatrixUniformLocation  = GL.getUniformLocation(PROGRAM,'viewMatrix');
+    const projMatrixUniformLocation  = GL.getUniformLocation(PROGRAM,'projMatrix');
+
+    const worldMatrix = new Float32Array(16);
+    const viewMatrix  = new Float32Array(16);
+    const projMatrix  = new Float32Array(16);
+
+    glMatrix.mat4.identity(worldMatrix);
+    glMatrix.mat4.lookAt(viewMatrix, [0,0,-8],[0,0,0],[0,1,0]);
+    glMatrix.mat4.perspective(projMatrix, Math.PI / 4, 16 / 9, 0.1, 1000.0);
+
+    GL.uniformMatrix4fv(worldMatrixUniformLocation, GL.FALSE, worldMatrix);
+    GL.uniformMatrix4fv(viewMatrixUniformLocation, GL.FALSE, viewMatrix);
+    GL.uniformMatrix4fv(projMatrixUniformLocation, GL.FALSE, projMatrix);
+
+    return [worldMatrix, viewMatrix, projMatrix, worldMatrixUniformLocation, viewMatrixUniformLocation, projMatrixUniformLocation];
 
 }
