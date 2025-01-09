@@ -9,15 +9,15 @@ const vertexShaderSRC =
 'precision mediump float;',
 '',
 'attribute vec3 vertPosition;',
-'attribute vec3 vertColor;',
-'varying vec3 fragColor;',
+'attribute vec2 vertTextureCoord;',
+'varying vec2 fragTextureCoord;',
 'uniform mat4 worldMatrix;',
 'uniform mat4 viewMatrix;',
 'uniform mat4 projMatrix;',
 '',
 'void main()',
 '{',
-'  fragColor = vertColor;',
+'  fragTextureCoord = vertTextureCoord;',
 '  gl_Position = projMatrix * viewMatrix * worldMatrix * vec4(vertPosition, 1.0);',
 '}'
 ].join('\n');
@@ -26,50 +26,52 @@ const fragmentShaderSRC =
 [
 'precision mediump float;',
 '',
-'varying vec3 fragColor;',
+'varying vec2 fragTextureCoord;',
+'uniform sampler2D sampler;',
+'',
 'void main()',
 '{',
-'  gl_FragColor = vec4(fragColor, 1.0);',
+'  gl_FragColor = texture2D(sampler, fragTextureCoord);',
 '}'
 ].join('\n');
 
-const BOX_VERTEX_DATA = [
-//  X     Y     Z         R    G    B
--1.0, 1.0, -1.0,   0.5, 0.5, 0.5,
-		-1.0, 1.0, 1.0,    0.5, 0.5, 0.5,
-		1.0, 1.0, 1.0,     0.5, 0.5, 0.5,
-		1.0, 1.0, -1.0,    0.5, 0.5, 0.5,
+const BOX_VERTEX_DATA = 
+[ // X, Y, Z           U, V
+    // Top
+    -1.0, 1.0, -1.0,   0, 0,
+    -1.0, 1.0, 1.0,    0, 1,
+    1.0, 1.0, 1.0,     1, 1,
+    1.0, 1.0, -1.0,    1, 0,
 
-		// Left
-		-1.0, 1.0, 1.0,    0.75, 0.25, 0.5,
-		-1.0, -1.0, 1.0,   0.75, 0.25, 0.5,
-		-1.0, -1.0, -1.0,  0.75, 0.25, 0.5,
-		-1.0, 1.0, -1.0,   0.75, 0.25, 0.5,
+    // Left
+    -1.0, 1.0, 1.0,    0, 0,
+    -1.0, -1.0, 1.0,   1, 0,
+    -1.0, -1.0, -1.0,  1, 1,
+    -1.0, 1.0, -1.0,   0, 1,
 
-		// Right
-		1.0, 1.0, 1.0,    0.25, 0.25, 0.75,
-		1.0, -1.0, 1.0,   0.25, 0.25, 0.75,
-		1.0, -1.0, -1.0,  0.25, 0.25, 0.75,
-		1.0, 1.0, -1.0,   0.25, 0.25, 0.75,
+    // Right
+    1.0, 1.0, 1.0,     1, 1,
+    1.0, -1.0, 1.0,    0, 1,
+    1.0, -1.0, -1.0,   0, 0,
+    1.0, 1.0, -1.0,    1, 0,
 
-		// Front
-		1.0, 1.0, 1.0,    1.0, 0.0, 0.15,
-		1.0, -1.0, 1.0,    1.0, 0.0, 0.15,
-		-1.0, -1.0, 1.0,    1.0, 0.0, 0.15,
-		-1.0, 1.0, 1.0,    1.0, 0.0, 0.15,
+    // Front
+    1.0, 1.0, 1.0,     1, 1,
+    1.0, -1.0, 1.0,    1, 0,
+    -1.0, -1.0, 1.0,   0, 0,
+    -1.0, 1.0, 1.0,    0, 1,
 
-		// Back
-		1.0, 1.0, -1.0,    0.0, 1.0, 0.15,
-		1.0, -1.0, -1.0,    0.0, 1.0, 0.15,
-		-1.0, -1.0, -1.0,    0.0, 1.0, 0.15,
-		-1.0, 1.0, -1.0,    0.0, 1.0, 0.15,
+    // Back
+    1.0, 1.0, -1.0,    0, 0,
+    1.0, -1.0, -1.0,   0, 1,
+    -1.0, -1.0, -1.0,  1, 1,
+    -1.0, 1.0, -1.0,   1, 0,
 
-		// Bottom
-		-1.0, -1.0, -1.0,   0.5, 0.5, 1.0,
-		-1.0, -1.0, 1.0,    0.5, 0.5, 1.0,
-		1.0, -1.0, 1.0,     0.5, 0.5, 1.0,
-		1.0, -1.0, -1.0,    0.5, 0.5, 1.0,
-//  X     Y     Z         R    G    B
+    // Bottom
+    -1.0, -1.0, -1.0,  1, 1,
+    -1.0, -1.0, 1.0,   1, 0,
+    1.0, -1.0, 1.0,    0, 0,
+    1.0, -1.0, -1.0,   0, 1,
 ];
 
 const BOX_INDEX_DATA =
@@ -110,6 +112,8 @@ let WORLD_MATRIX_UNIFORM_LOC;
 let VIEW_MATRIX_UNIFORM_LOC;
 let PROJ_MATRIX_UNIFORM_LOC;
 
+let CRATE_TEXTURE;
+
 function init() {
 
     createUI(document, CONFIG.WIDTH, CONFIG.HEIGHT);
@@ -125,15 +129,15 @@ function init() {
         }
     };
 
-    GL.enable(GL.DEPTH_TEST);
-    GL.enable(GL.CULL_FACE);
-    GL.cullFace(GL.BACK);
-    GL.frontFace(GL.CCW);
+    GL.enable(GL.DEPTH_TEST); GL.enable(GL.CULL_FACE);
+    GL.cullFace(GL.BACK); GL.frontFace(GL.CCW);
 
     const SHADER_PROGRAM = createShaderProgram(GL, CONFIG.DEBUG, vertexShaderSRC, fragmentShaderSRC);
     createVertexBuffer(GL, BOX_VERTEX_DATA);
     createIndexBuffer(GL, BOX_INDEX_DATA);
     enableVertexAttributeArrays( GL, SHADER_PROGRAM );
+
+    CRATE_TEXTURE = setupTexture(GL,document);
 
     GL.useProgram(SHADER_PROGRAM);
 
@@ -161,7 +165,13 @@ function loop() {
     glMatrix.mat4.rotate(WORLD_MATRIX, identityMatrix, angle, [1, 1, 1]);
     GL.uniformMatrix4fv(WORLD_MATRIX_UNIFORM_LOC, GL.FALSE, WORLD_MATRIX);
 
+
+
     gpuClearScreen(GL,[0.1,0.1,0.2,1.0]);
+
+    GL.bindTexture(GL.TEXTURE_2D, CRATE_TEXTURE);
+    GL.activeTexture(GL.TEXTURE0);
+
     GL.drawElements(GL.TRIANGLES, BOX_INDEX_DATA.length, GL.UNSIGNED_SHORT, 0);
 
     requestAnimationFrame(loop);

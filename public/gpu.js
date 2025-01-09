@@ -1,3 +1,4 @@
+/** @function @param {WebGLRenderingContext} GL */
 function gpuClearScreen(GL, COLOR) {
     GL.clearColor(COLOR[0], COLOR[1], COLOR[2], COLOR[3]);
     GL.clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
@@ -46,6 +47,7 @@ function createShaderProgram(GL, DEBUG, vertexShaderSRC, fragmentShaderSRC) {
 
 }
 
+/** @function @param {WebGLRenderingContext} GL */
 function createVertexBuffer(GL, VertexData) {
     const BUFFER = GL.createBuffer();
     GL.bindBuffer(GL.ARRAY_BUFFER, BUFFER);
@@ -53,6 +55,7 @@ function createVertexBuffer(GL, VertexData) {
     return BUFFER;
 };
 
+/** @function @param {WebGLRenderingContext} GL */
 function createIndexBuffer(GL, IndexData) {
 
     const BUFFER = GL.createBuffer();
@@ -61,32 +64,34 @@ function createIndexBuffer(GL, IndexData) {
     return BUFFER;
 };
 
+/** @function @param {WebGLRenderingContext} GL */
 function enableVertexAttributeArrays(GL, SHADER_PROGRAM) {
 
     const POSITION_ATTRIBUTE_LOCATION = GL.getAttribLocation(SHADER_PROGRAM, 'vertPosition');
-    const COLOR_ATTRIBUTE_LOCATION = GL.getAttribLocation(SHADER_PROGRAM, 'vertColor');
+    const TEXTURE_ATTRIBUTE_LOCATION = GL.getAttribLocation(SHADER_PROGRAM, 'vertTextureCoord');
     GL.vertexAttribPointer(
         POSITION_ATTRIBUTE_LOCATION,
         3,
         GL.FLOAT,
         GL.FALSE,
-        6 * Float32Array.BYTES_PER_ELEMENT,
+        5 * Float32Array.BYTES_PER_ELEMENT,
         0
     );
     GL.vertexAttribPointer(
-        COLOR_ATTRIBUTE_LOCATION,
-        3,
+        TEXTURE_ATTRIBUTE_LOCATION,
+        2,
         GL.FLOAT,
         GL.FALSE,
-        6 * Float32Array.BYTES_PER_ELEMENT,
+        5 * Float32Array.BYTES_PER_ELEMENT,
         3 * Float32Array.BYTES_PER_ELEMENT
     );
 
     GL.enableVertexAttribArray(POSITION_ATTRIBUTE_LOCATION);
-    GL.enableVertexAttribArray(COLOR_ATTRIBUTE_LOCATION);
+    GL.enableVertexAttribArray(TEXTURE_ATTRIBUTE_LOCATION);
 
 };
 
+/** @function @param {WebGLRenderingContext} GL */
 function setupMatrixUniforms(GL,PROGRAM) {
 
     const worldMatrixUniformLocation = GL.getUniformLocation(PROGRAM,'worldMatrix');
@@ -107,4 +112,24 @@ function setupMatrixUniforms(GL,PROGRAM) {
 
     return [worldMatrix, viewMatrix, projMatrix, worldMatrixUniformLocation, viewMatrixUniformLocation, projMatrixUniformLocation];
 
+}
+
+/** @function @param {WebGLRenderingContext} GL @param {Document} doc */
+function setupTexture(GL,doc) {
+
+    const CRATE_TEXTURE_IMG = doc.getElementById('CRATE-TEXTURE');
+
+    const CRATE_TEXTURE = GL.createTexture();
+    GL.bindTexture(GL.TEXTURE_2D, CRATE_TEXTURE);
+
+    GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, GL.CLAMP_TO_EDGE);
+    GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, GL.CLAMP_TO_EDGE);
+    GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, GL.NEAREST);
+    GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, GL.NEAREST);
+
+    GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGBA, GL.RGBA, GL.UNSIGNED_BYTE, CRATE_TEXTURE_IMG);
+
+    GL.bindTexture(GL.TEXTURE_2D, null);
+
+    return CRATE_TEXTURE;
 }

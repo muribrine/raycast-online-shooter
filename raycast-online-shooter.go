@@ -18,6 +18,8 @@ func main() {
 	g.GET("/", func(ctx *gin.Context) { ctx.HTML(http.StatusOK, "index.html", gin.H{}) })
 	g.GET("/style.css", func(ctx *gin.Context) { ctx.File("./public/style.css") })
 
+	g.GET("/img/CrateTexture.png", func(ctx *gin.Context) { ctx.File("./public/img/CrateTexture.png") })
+
 	g.GET("/core.js", func(ctx *gin.Context) { ctx.File("./public/core.js") })
 	g.GET("/ui.js", func(ctx *gin.Context) { ctx.File("./public/ui.js") })
 	g.GET("/gpu.js", func(ctx *gin.Context) { ctx.File("./public/gpu.js") })
