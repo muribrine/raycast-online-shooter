@@ -34,14 +34,16 @@ const TRIANGLE_VERTICES = [
     0.0, 0.5,   1.0, 0.0, 0.0,
     -0.5, -0.5, 0.0, 1.0, 0.0,
     0.5, -0.5,  0.0, 0.0, 1.0
-]
+];
 
-function init(CONFIG) {
+let GL;
+
+function init() {
 
     createUI(document, CONFIG.WIDTH, CONFIG.HEIGHT);
 
     /** @type {WebGLRenderingContext} */
-    let GL = document.getElementById('canvas').getContext('webgl');
+    GL = document.getElementById('canvas').getContext('webgl');
     if(!GL) {
         GL = document.getElementById('canvas').getContext('experimental-webgl');
         if(!GL) {
@@ -64,4 +66,12 @@ function init(CONFIG) {
     
 };
 
-init(CONFIG);
+function loop() {
+
+    requestAnimationFrame(loop);
+
+}
+
+if(init()) {
+    requestAnimationFrame(loop);
+};
