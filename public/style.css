@@ -5,96 +5,23 @@
 
 body {
     background-color:hsl(210, 10%, 10%);
+
+    height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center
 }
 
 #canvas {
 
-    width: 90rem;
-    height: 60rem;
+    width: 88vw;
+    aspect-ratio: calc(16 / 9);
 
     background: black;
 
     image-rendering: crisp-edges;
     image-rendering: pixelated;
     image-rendering: -moz-crisp-edges;
-
-}
-
-#overlay {
-    width: 90rem;
-    height: 60rem;
-
-    position: absolute;
-    top: 0;
-    left: 0;
-
-}
-
-#HUD {
-
-    width: 90rem;
-    height: 5rem;
-
-    background-color: hsl(210, 10%, 30%);
-    border-top-style: solid;
-    border-top-color: white;
-    border-top-width: 1px;
-    color: white;
-    font-family: "Jersey 15", monospace;
-
-    position: absolute;
-    bottom: 0;
-    left: 0;
-
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-
-    z-index: 3;
-
-}
-
-#CROSSHAIR {
-
-    background-color: red;
-    width: 0.75rem;
-    height: 0.75rem;
-
-    border-radius: 2px;
-
-    position: absolute;
-    top: calc(50% - 0.2rem);
-    left: calc(50% - 0.2rem);
-
-}
-
-#GUN_DISPLAY {
-
-    width: 20rem;
-    height: 20rem;
-
-    position: absolute;
-    bottom: 4rem;
-    left: calc(50% - 9.75rem);
-
-    z-index: 1;
-
-    image-rendering: pixelated;
-
-}
-
-#BOOM {
-    width: 10rem;
-    height: 10rem;
-
-    position: absolute;
-    bottom: 18rem;
-    left: calc(50% - 5rem);
-
-    z-index: 2;
-
-    image-rendering: pixelated;
-
-    display: none;
 
 }

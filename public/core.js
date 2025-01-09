@@ -1,8 +1,40 @@
 const CONFIG = {
-    WIDTH: 800,
-    HEIGHT: 600,
+    WIDTH: 640,
+    HEIGHT: 360,
     DEBUG: true,
 };
+
+const vertexShaderSRC =
+[
+'precision mediump float;',
+'',
+'attribute vec2 vertPosition;',
+'attribute vec3 vertColor;',
+'varying vec3 fragColor;',
+'',
+'void main()',
+'{',
+'  fragColor = vertColor;',
+'  gl_Position = vec4(vertPosition, 0.0, 1.0);',
+'}'
+].join('\n');
+
+const fragmentShaderSRC =
+[
+'precision mediump float;',
+'',
+'varying vec3 fragColor;',
+'void main()',
+'{',
+'  gl_FragColor = vec4(fragColor, 1.0);',
+'}'
+].join('\n');
+
+const TRIANGLE_VERTICES = [
+    0.0, 0.5,   1.0, 0.0, 0.0,
+    -0.5, -0.5, 0.0, 1.0, 0.0,
+    0.5, -0.5,  0.0, 0.0, 1.0
+]
 
 function init(CONFIG) {
 
@@ -12,36 +44,23 @@ function init(CONFIG) {
     let GL = document.getElementById('canvas').getContext('webgl');
     if(!GL) {
         GL = document.getElementById('canvas').getContext('experimental-webgl');
+        if(!GL) {
+            console.error('WEBGL not supported.');
+            alert('WEBGL not supported.');
+            return false;
+        }
     };
 
     gpuClearScreen(GL,[0.75,0.85,0.8,1.0]);
 
-    const SHADER_PROGRAM = createShaderProgram(GL, CONFIG.DEBUG);
-
-    const TRIANGLE_VERTICES = [
-        0.0, 0.5,
-        -0.5, -0.5,
-        0.5, -0.5
-    ]
-
-    const TRIANGLE_VERTEX_BUFFER = GL.createBuffer();
-    GL.bindBuffer(GL.ARRAY_BUFFER, TRIANGLE_VERTEX_BUFFER);
-    GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(TRIANGLE_VERTICES), GL.STATIC_DRAW);
-
-    const POSITION_ATTRIBUTE_LOCATION = GL.getAttribLocation(SHADER_PROGRAM, 'vertPosition');
-    GL.vertexAttribPointer(
-        POSITION_ATTRIBUTE_LOCATION,
-        2,
-        GL.FLOAT,
-        GL.FALSE,
-        2 * Float32Array.BYTES_PER_ELEMENT,
-        0
-    );
-
-    GL.enableVertexAttribArray(POSITION_ATTRIBUTE_LOCATION);
+    const SHADER_PROGRAM = createShaderProgram(GL, CONFIG.DEBUG, vertexShaderSRC, fragmentShaderSRC);
+    createVertexBuffer(GL, TRIANGLE_VERTICES);
+    eanbleVertexAttributeArrays( GL, SHADER_PROGRAM );
 
     GL.useProgram(SHADER_PROGRAM);
     GL.drawArrays(GL.TRIANGLES, 0, 3);
+
+    return true;
     
 };
 
