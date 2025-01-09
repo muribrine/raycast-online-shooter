@@ -20,12 +20,8 @@ function init() {
     };
 
     const [
-        WORLD_MATRIX,
-        VIEW_MATRIX,
-        PROJ_MATRIX,
-        WORLD_MATRIX_UNIFORM_LOC,
-        VIEW_MATRIX_UNIFORM_LOC,
-        PROJ_MATRIX_UNIFORM_LOC,
+        WORLD_MATRIX, VIEW_MATRIX, PROJ_MATRIX,
+        WORLD_MATRIX_UNIFORM_LOC, VIEW_MATRIX_UNIFORM_LOC, PROJ_MATRIX_UNIFORM_LOC,
         CRATE_TEXTURE,
         WEBGL_STATUS
     ] = setupWebGL(GL, CONFIG, document);
@@ -36,22 +32,19 @@ function init() {
         return;
     }
 
+    const inputMap = setupInput(document);
+
     let angle = 0;
     let identityMatrix = new Float32Array(16);
     glMatrix.mat4.identity(identityMatrix);
-
-    let lastTime = performance.now();
-    let currentTime;
-    let deltaTime;
+    let lastTime = performance.now(); let currentTime; let deltaTime;
 
     const loop = () => {
 
-        currentTime = performance.now();
-        deltaTime = (currentTime - lastTime) / 1000;
-        lastTime = currentTime;
+        currentTime = performance.now(); deltaTime = (currentTime - lastTime) / 1000; lastTime = currentTime;
 
         angle = performance.now() / 1000 / 3 * 2 * Math.PI;
-        glMatrix.mat4.rotate(WORLD_MATRIX, identityMatrix, angle, [0.5, 1, 0.25]);
+        glMatrix.mat4.rotate(WORLD_MATRIX, identityMatrix, angle, [0.5, 1.0, 0.75]);
         GL.uniformMatrix4fv(WORLD_MATRIX_UNIFORM_LOC, GL.FALSE, WORLD_MATRIX);
     
         gpuClearScreen(GL,[0.1,0.1,0.2,1.0]);
