@@ -12,7 +12,7 @@ body {
     width: 90rem;
     height: 60rem;
 
-    background: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 55%, rgba(61,77,92,1) 100%);
+    background: black;
 
     image-rendering: crisp-edges;
     image-rendering: pixelated;
